@@ -1,0 +1,88 @@
+INSERT INTO `wells`.`oauth_client_details`
+(`client_id`,
+`client_secret`,
+`resource_ids`,
+`scope`,
+`authorized_grant_types`,
+`web_server_redirect_uri`,
+`authorities`,
+`access_token_validity`,
+`refresh_token_validity`,
+`additional_information`,
+`autoapprove`)
+
+VALUES
+('USER_CLIENT_APP',
+'{bcrypt}$2a$10$EOs8UROb14e7ZaydvXECA4LoThP0oFHKvVF/iBZ/ker17Eocz4Vi',
+'USER_CLIENT_RESOURCE,USER_ADMIN_RESOURCE',
+'role_admin,role_superadmin',
+'authorization_code,password,refresh_token,implicit',
+NULL,
+NULL,
+900,
+3600,
+'{}',
+NULL);
+CREATE TABLE `wells`.`permission` (
+  `int` INT NULL COMMENT '',
+  `name` VARCHAR(60) NULL COMMENT '',
+  PRIMARY KEY (`int`)  COMMENT '',
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '');
+
+INSERT INTO `wells`.`permission` (`name`) VALUES ('can_create_user');
+INSERT INTO `wells`.`permission` (`name`) VALUES ('can_update_user');
+INSERT INTO `wells`.`permission` (`name`) VALUES ('can_read_user');
+INSERT INTO `wells`.`permission` (`name`) VALUES ('can_delete_user');
+
+CREATE TABLE `wells`.`role` (
+  `Id` INT NOT NULL COMMENT '',
+  `name` VARCHAR(55) NULL COMMENT '',
+  PRIMARY KEY (`Id`)  COMMENT '');
+
+
+CREATE TABLE `wells`.`permission_role` (
+  `permission_id` INT NULL COMMENT '',
+  `role_id` INT NULL COMMENT '',
+  INDEX `permission_role_fk_idx` (`permission_id` ASC)  COMMENT '',
+  INDEX `permission_role_rol_fk_idx` (`permission_id` ASC, `role_id` ASC)  COMMENT '',
+  CONSTRAINT `permission_role_per_fk`
+    FOREIGN KEY (`permission_id`)
+    REFERENCES `wells`.`permission` (`int`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `permission_role_rol_fk`
+    FOREIGN KEY (`permission_id` , `role_id`)
+    REFERENCES `wells`.`role` (`Id` , `Id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `wells`.`permission_role` (
+  `permission_id` INT NULL COMMENT '',
+  `role_id` INT NULL COMMENT '');
+
+
+
+insert into permission_role value (3,2)
+
+CREATE TABLE `wells`.`user` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `username` VARCHAR(255) NULL COMMENT '',
+  `password` VARCHAR(255) NULL COMMENT '',
+  `email` VARCHAR(255) NULL COMMENT '',
+  `ENABLED` BIT(1) NULL COMMENT '',
+  `ACCOUNT_EXPIRED` BIT(1) NULL COMMENT '',
+  `CREDENTIALS_EXPIRED` BIT(1) NULL COMMENT '',
+  `ACCOUNT_LOCKED` BIT(1) NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '');
+
+
+INSERT INTO `wells`.`user` ( `username`, `password`, `email`, `ENABLED`, `ACCOUNT_EXPIRED`, `CREDENTIALS_EXPIRED`, `ACCOUNT_LOCKED`) VALUES ( 'admin', '{bcrypt}$2a$10$EOs8UROb14e7ZaydvXECA4LoThP0oFHKvVF/iBZ/ker17Eocz4Vi', 'william@gmail.com', 1, 0, 0, 0);
+
+INSERT INTO `wells`.`user` ( `username`, `password`, `email`, `ENABLED`, `ACCOUNT_EXPIRED`, `CREDENTIALS_EXPIRED`, `ACCOUNT_LOCKED`) VALUES ( 'user', '{bcrypt}$2a$10$EOs8UROb14e7ZaydvXECA4LoThP0oFHKvVF/iBZ/ker17Eocz4Vi', 'jhon@gmail.com', 1, 0, 0, 0);
+
+CREATE TABLE `wells`.`role_user` (
+  `role_id` INT NULL COMMENT '',
+  `user_id` INT NULL COMMENT '');
+
+
+insert into role_user value (1,1)
